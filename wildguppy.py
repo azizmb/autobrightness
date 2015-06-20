@@ -21,7 +21,7 @@ except:
     os.system("touch %s" % file_path)
     json.dump(default_config, open(file_path, 'w'))
     config_file = json.load(open(file_path))
-    
+
 maxbr = float(config_file['maxbrightness'])
 minbr = float(config_file['minbrightness'])
 
@@ -38,7 +38,7 @@ def takeScreeenSample(tmpimg):
 
 def error_msg(type, arg):
     if type == 1:
-        print "Error: enter your argument after '%s'" % arg 
+        print "Error: enter your argument after '%s'" % arg
 
     if type == 2:
         print "autobrightness: There is no '%s' OPTION." % arg
@@ -53,13 +53,13 @@ class autoBrightness():
     def __init__(self):
         self.maxbr_ = maxbr
         self.minbr_ = minbr
-                
+
     def run(self, samplerate=config_file['samplerate']):
         self.samplerate = float(samplerate)
         while True:
             self.run_once()
             time.sleep(self.samplerate)
-                        
+
     def run_once(self):
         tmpimg = "/tmp/autobrightness-sample.jpg"
         tmpScreenImg = "/tmp/autobrightness-screen-sample.jpg"
@@ -76,7 +76,7 @@ class autoBrightness():
         print new_set
         os.system('xbacklight -set %s' % str(new_set))
         return True
-                
+
 if __name__ == "__main__":
     run = False
     args = sys.argv
@@ -101,7 +101,7 @@ if __name__ == "__main__":
                     error_msg(3, args[i+1])
                     sys.exit()
 
-            
+
             if args[i] == "-x" or args[i] == "--max":
                 try:
                     float(args[i+1])
@@ -141,7 +141,7 @@ if __name__ == "__main__":
                     error_msg(1, args[i])
                     sys.exit()
                 except ValueError:
-                    error_msg(3, args[i+1]) 
+                    error_msg(3, args[i+1])
                     sys.exit()
                 break
             if args[i] == "-g" or args[i] == "--gui":

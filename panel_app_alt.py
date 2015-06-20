@@ -40,8 +40,8 @@ class AutoBrightnessIndicator():
         eachLevel = Gtk.Menu();
         self.levelItem.set_submenu(eachLevel)
 
-        self.subLevels = {} 
-        
+        self.subLevels = {}
+
         for i in range(10):
             subLevel = Gtk.MenuItem(str(i*10+10))
             self.subLevels[subLevel] = i*10+10

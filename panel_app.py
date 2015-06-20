@@ -40,8 +40,8 @@ m.append(quitItem)
 eachLevel = gtk.Menu()
 levelItem.set_submenu(eachLevel)
 
-subLevels = {} 
-    
+subLevels = {}
+
 for i in xrange(10):
     subLevel = gtk.MenuItem(str(i*10+10))
     subLevels[subLevel] = i*10+10
@@ -66,10 +66,10 @@ maxbr_global = int(wildguppy.config_file['maxbrightness'])
 minbr_global = int(wildguppy.config_file['minbrightness'])
 
 x = 0
-    
+
 def startProgram(item):
     #sampling starts here
-    global x 
+    global x
     program.maxbr_ = maxbr_global
     program.minbr_ = minbr_global
     x = gobject.timeout_add((samplerate*1000), program.run_once)
@@ -84,7 +84,7 @@ def stopProgram(item):
     minbr_global = int(config_file['minbrightness'])
     samplerate = int(config_file['samplerate'])
     gobject.source_remove(x)
-    
+
 stopItem.connect('activate', stopProgram)
 
 
@@ -99,7 +99,7 @@ def quit(item):
 quitItem.connect('activate', quit)
 
 def settingsShow(item):
-	os.system("%s/settings.py" % script_dir)
+        os.system("%s/settings.py" % script_dir)
 settingsItem.connect('activate', settingsShow)
 
 def luckMaker(item):
@@ -110,7 +110,7 @@ def luckMaker(item):
     except TypeError:
         program.run_once()
         pass
-    
+
 luckyItem.connect('activate', luckMaker)
 
 def aboutShow(item):
@@ -122,6 +122,5 @@ def brightnessSet(item):
     os.system("xbacklight -set %s" % subLevels[item])
 for x in subLevels:
     x.connect('activate', brightnessSet)
-    
-gtk.main()
 
+gtk.main()
