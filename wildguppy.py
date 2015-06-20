@@ -62,6 +62,19 @@ class autoBrightness():
             time.sleep(self.samplerate)
                         
     def run_once(self):
+        screen_on = True
+        p = subprocess.Popen(['gnome-screensaver-command', '-q'], stdout=subprocess.PIPE)
+        try:
+            (output, err) = p.communicate()
+        except:
+            print 'Could not get screen status, defaulting to true'
+        else:
+            screen_on = 'is inactive' in output
+
+        if not screen_on:
+            print 'Screen off, not running'
+            return True
+
         tmpimg = "/tmp/autobrightness-sample.jpg"
         tmpScreenImg = "/tmp/autobrightness-screen-sample.jpg"
         takeSample(tmpimg)
