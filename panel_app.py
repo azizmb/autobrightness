@@ -9,9 +9,10 @@ import gobject
 import json
 
 gobject.threads_init()
-file_path = "/opt/wildguppy/icon/fish.png"
 config_path = os.getenv("HOME")+"/.config/wildguppy/config.json"
 script_dir, script_name = os.path.split(os.path.realpath(__file__))
+file_path = os.path.join(script_dir, "fish.png")
+
 
 a = appindicator.Indicator('wildguppy', file_path, appindicator.CATEGORY_APPLICATION_STATUS)
 a.set_status( appindicator.STATUS_ACTIVE )
