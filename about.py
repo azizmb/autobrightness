@@ -1,20 +1,18 @@
-#!/usr/bin/python
-from gi.repository import Gtk
+from gi.repository import Gtk, AppIndicator3 as AppIndicator, GLib
 
-class MyWindow(Gtk.Window):
 
-    def __init__(self):
-        Gtk.Window.__init__(self, title="WildGuppy 1.0")
+class DialogAbout(Gtk.Dialog):
 
-        self.about_text = Gtk.Label("Name: WildGuppy 1.0")
-        self.about_text.set_markup("Name: WildGuppy 1.0 \nDeveloper: Bilegt\n <a href=\"http://www.twitter.com/billyboar\" "
-                 "title=\"My Twitter\">My Twitter</a> ")
-        self.add(self.about_text)
+    def __init__(self, parent):
+        Gtk.Dialog.__init__(self, "About", parent, 0,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+             Gtk.STOCK_OK, Gtk.ResponseType.OK))
 
-    def on_button_clicked(self, widget):
-        print("Hello World")
+        self.set_default_size(150, 100)
 
-win = MyWindow()
-win.connect("delete-event", Gtk.main_quit)
-win.show_all()
-Gtk.main()
+        label = Gtk.Label("Name: WildGuppy 1.0")
+        label.set_markup("Name: WildGuppy 1.0 \nDeveloper: Bilegt\n <a href=\"http://www.twitter.com/billyboar\" "
+                         "title=\"My Twitter\">My Twitter</a> ")
+        box = self.get_content_area()
+        box.add(label)
+        self.show_all()

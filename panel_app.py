@@ -3,10 +3,12 @@
 import appindicator
 import gtk
 import os
-import wildguppy
 import thread
 import gobject
 import json
+
+import wildguppy
+from about import DialogAbout
 
 gobject.threads_init()
 config_path = os.getenv("HOME")+"/.config/wildguppy/config.json"
@@ -114,8 +116,10 @@ def luckMaker(item):
 luckyItem.connect('activate', luckMaker)
 
 def aboutShow(item):
-    #about window
-    os.system("%s/about.py" % script_dir)
+    dialog = DialogAbout(None)
+    dialog.run()
+    dialog.destroy()
+
 aboutItem.connect('activate', aboutShow)
 
 def brightnessSet(item):

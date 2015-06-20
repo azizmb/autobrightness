@@ -3,8 +3,11 @@
 
 from gi.repository import Gtk, AppIndicator3 as AppIndicator, GLib
 from os import path, getenv, system
-import wildguppy
 from json import load
+
+import wildguppy
+from about import DialogAbout
+
 
 class AutoBrightnessIndicator():
     """An indicator for the AutoBrightness script"""
@@ -97,7 +100,9 @@ class AutoBrightnessIndicator():
 
     def aboutShow(self, widget):
         """Show the About window"""
-        system( self.script_dir + "/about.py" )
+        dialog = DialogAbout(None)
+        dialog.run()
+        dialog.destroy()
 
     def brightnessSet(self, widget, item):
         """Execute the command to set the screen brightness"""
