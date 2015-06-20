@@ -6,6 +6,7 @@ import os
 import time
 import sys
 import json
+import subprocess
 
 
 default_samplerate = 5
@@ -17,8 +18,8 @@ default_config = {'samplerate':str(default_samplerate), 'maxbrightness':"100", '
 try:
     config_file = json.load(open(file_path))
 except:
-    os.system("mkdir %s/.config/wildguppy/" % home_path)
-    os.system("touch %s" % file_path)
+    subprocess.call("mkdir %s/.config/wildguppy/" % home_path, shell=True)
+    subprocess.call("touch %s" % file_path, shell=True)
     json.dump(default_config, open(file_path, 'w'))
     config_file = json.load(open(file_path))
     
@@ -31,10 +32,10 @@ def brightness(im_file):
     return stat.rms[0]
 
 def takeSample(tmpimg):
-    os.system("fswebcam -r 356x292 -d /dev/video0 %s" %tmpimg)
+    subprocess.call("fswebcam -r 356x292 -d /dev/video0 %s" %tmpimg, shell=True)
 
 def takeScreeenSample(tmpimg):
-    os.system("scrot %s" %tmpimg)
+    subprocess.call("scrot %s" %tmpimg, shell=True)
 
 def error_msg(type, arg):
     if type == 1:
@@ -74,7 +75,7 @@ class autoBrightness():
         new_set = (brightnessLevel * 100)/120
         print "\n"
         print new_set
-        os.system('xbacklight -set %s' % str(new_set))
+        subprocess.call('xbacklight -set %s' % str(new_set), shell=True)
         return True
                 
 if __name__ == "__main__":
@@ -146,7 +147,7 @@ if __name__ == "__main__":
                 break
             if args[i] == "-g" or args[i] == "--gui":
                error = False
-               os.system("./panel_app.py")
+               subprocess.call("./panel_app.py", shell=True)
 
         if error:
             error_msg(2, args[i])
