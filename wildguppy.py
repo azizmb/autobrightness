@@ -34,7 +34,7 @@ def takeSample(tmpimg):
     os.system("fswebcam -r 356x292 -d /dev/video0 %s" %tmpimg)
 
 def takeScreeenSample(tmpimg):
-    os.system("scrot %s" %tmpimg)
+    os.system("scrot %s" % tmpimg)
 
 def error_msg(type, arg):
     if type == 1:
@@ -64,13 +64,13 @@ class autoBrightness():
         tmpimg = "/tmp/autobrightness-sample.jpg"
         tmpScreenImg = "/tmp/autobrightness-screen-sample.jpg"
         takeSample(tmpimg)
-        #takeScreeenSample(tmpScreenImg)
+        takeScreeenSample(tmpScreenImg)
         brightnessLevel = brightness(tmpimg)
-        #ScreenbrightnessLevel = brightness(tmpScreenImg)
+        ScreenbrightnessLevel = brightness(tmpScreenImg)
         print brightnessLevel
-        #print ScreenbrightnessLevel
-        #set = (brightnessLevel + 255 - ScreenbrightnessLevel)/2.0/255
-        #new_set = self.minbr_ + (self.maxbr_ - self.minbr_)*set
+        print ScreenbrightnessLevel
+        set = (brightnessLevel + 255 - ScreenbrightnessLevel)/2.0/255
+        new_set = self.minbr_ + (self.maxbr_ - self.minbr_)*set
         new_set = (brightnessLevel * 100)/120
         print "\n"
         print new_set
