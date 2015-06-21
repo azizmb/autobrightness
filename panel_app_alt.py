@@ -4,6 +4,7 @@
 from gi.repository import Gtk, AppIndicator3 as AppIndicator, GLib
 from os import path, getenv, system
 from json import load
+import signal
 
 import wildguppy
 from about import DialogAbout
@@ -115,6 +116,7 @@ class AutoBrightnessIndicator():
     def main(self):
         """Start the Gtk loop"""
         self.startProgram(None)
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
         Gtk.main()
 
 
