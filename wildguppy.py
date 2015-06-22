@@ -20,26 +20,18 @@ DEFAULT_CONFIG = {
     'sample_rate': 5,
 }
 
+HOME_PATH = os.getenv("HOME")
+CONFIG_FOLDER_PATH = os.path.join(HOME_PATH, '.config')
+APP_CONFIG_FOLDER_PATH = os.path.join(CONFIG_FOLDER_PATH, '.config', 'wildguppy')
+CONFIG_FILE_PATH = os.path.join(APP_CONFIG_FOLDER_PATH, 'config.json')
 
-def init_default_config():
-    home_path = os.getenv("HOME")
-    config_folder_path = os.path.join(home_path, '.config')
-    app_config_folder_path = os.path.join(home_path, '.config', 'wildguppy')
-    config_file_path = os.path.join(app_config_folder_path, 'config.json')
-
-    if os.path.exists(config_file_path):
-        try:
-            with open(config_file_path) as fp:
-                config = json.load(fp)
-        except:
-            print "Error loading configuration"
-    else:
+def init_default_config(config_file_path):
+    if not os.path.exists(config_file_path):
         config_dir = os.path.dirname(config_file_path)
         if not os.path.exists(config_dir):
             os.makedirs(config_dir)
         with open(config_file_path, 'w') as fp:
-            json.dump(default_config, fp)
-        config = default_config
+            json.dump(DEFAULT_CONFIG, fp)
 
 
 def brightness(im_file):
@@ -56,10 +48,6 @@ def get_ambient_brightness():
 
 
 def run_once(config, plugins):
-    plugins = (
-        ScreenBrightnessPlugin(config.get('screen_brightness', {})),
-        ThinkpadKeyboardBrightnessPlugin(config.get('keyboard_brightness', {}))
-    )
     ambient_brightness = get_ambient_brightness()
 
     print ambient_brightness
@@ -69,91 +57,37 @@ def run_once(config, plugins):
 
     return True
 
+def init_plugins(config):
+    return (
+        ScreenBrightnessPlugin(config.get('screen_brightness', {})),
+        ThinkpadKeyboardBrightnessPlugin(config.get('keyboard_brightness', {}))
+    )
 
 def run(config):
     samplerate = config['samplerate']
 
+    plugins = init_plugins(config)
+
     while True:
-        run_once(config)
+        run_once(config, plugins)
         time.sleep(samplerate)
 
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Process ambient light.')
+    parser.add_argument('--config', dest='config', action='store',
+                        default=None,
+                        help='Config file to use.')
 
-# if __name__ == "__main__":
-#     run = False
-#     args = sys.argv
-#     if len(args) >= 2:
-#         for i in xrange(len(args)):
-#             error = True
-#             if args[i] == "help" or args[i] == "--help" or args[i] == "-help" or args[i] == "-h":
-#                 print "USAGE: autobrightness [OPTION]... [VALUE]...\n\n Adjusts a laptop's brightness automatically, by using camera samples taken at a user definable interval.\n\n -s, --set              set time between samples to your configuration file\n -t, --time             set time between samples for this session\n -x, --max              set maximium brightness level to the config file\n -n, --min              set minimium brightness level to the config file"
-#                 sys.exit()
+    args = parser.parse_args()
 
-#             if args[i] == "-s" or args[i] == "--set":
-#                 error = False
-#                 try:
-#                     float(args[i+1])
-#                     config['samplerate'] = args[i+1]
-#                     json.dump(config, open('config.json', 'w'))
-#                     print "Your default time interval is now '%s' seconds\n" % args[i+1]
-#                 except IndexError:
-#                     error_msg(1, args[i])
-#                     sys.exit()
-#                 except ValueError:
-#                     error_msg(3, args[i+1])
-#                     sys.exit()
+    if not args.config:
+        config_file = CONFIG_FILE_PATH
+        init_default_config(config_file)
+    else:
+        config_file = args.config
 
-#             if args[i] == "-x" or args[i] == "--max":
-#                 try:
-#                     float(args[i+1])
-#                     config['maxbrightness'] = args[i+1]
-#                     json.dump(config, open('config.json', 'w'))
-#                     print "Your maximium brightness value is now '%s'\n" % args[i+1]
-#                 except IndexError:
-#                     error_msg(1, args[i])
-#                     sys.exit()
-#                 except ValueError:
-#                     error_msg(3, args[i+1])
-#                     sys.exit()
+    with open(config_file) as fp:
+        config = json.load(fp)
 
-#             if args[i] == "-n" or args[i] == "--min":
-#                 try:
-#                     float(args[i+1])
-#                     config['minbrightness'] = args[i+1]
-#                     json.dump(config, open('config.json', 'w'))
-#                     print "Your minimium brightness value is now '%s'\n" % args[i+1]
-#                 except IndexError:
-#                     error_msg(1, args[i])
-#                     sys.exit()
-#                 except ValueError:
-#                     error_msg(3, args[i+1])
-#                     sys.exit()
-
-#             if args[i] == "-t" or args[i] == "--time":
-#                 error = False
-#                 run = True
-#                 try:
-#                     arg = float(args[i+1])
-#                     if arg < 0:
-#                         print "Your sampling rate cannot be a negative number.  Resetting to default value of 5."
-#                     else:
-#                         samplerate = arg
-#                 except IndexError:
-#                     error_msg(1, args[i])
-#                     sys.exit()
-#                 except ValueError:
-#                     error_msg(3, args[i+1])
-#                     sys.exit()
-#                 break
-#             if args[i] == "-g" or args[i] == "--gui":
-#                error = False
-#                os.system("./panel_app.py")
-
-#         if error:
-#             error_msg(2, args[i])
-#     else:
-#         run = True
-
-#     if run:
-#         a = autoBrightness()
-#         a.run()
+    run(config)
