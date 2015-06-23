@@ -4,9 +4,10 @@ from gi.repository import Gtk, AppIndicator3 as AppIndicator, GLib
 class DialogAbout(Gtk.Dialog):
 
     def __init__(self, parent):
-        Gtk.Dialog.__init__(self, "About", parent, 0,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-             Gtk.STOCK_OK, Gtk.ResponseType.OK))
+        super(DialogAbout, self).__init__(
+            "About", parent, 0,
+            (Gtk.STOCK_OK, Gtk.ResponseType.OK)
+        )
 
         self.set_default_size(150, 100)
 
