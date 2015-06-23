@@ -47,7 +47,23 @@ def get_ambient_brightness():
     return brightness(TMP_CAMERA_IMAGE)
 
 
+def screen_on():
+    p = subprocess.Popen(['gnome-screensaver-command', '-q'], stdout=subprocess.PIPE)
+
+    try:
+        (output, err) = p.communicate()
+    except:
+        print 'Could not get screen status!'
+    else:
+        return 'is inactive' in output
+    finally:
+        return True
+
+
 def run_once(config, plugins):
+    if not screen_on():
+        return True
+
     ambient_brightness = get_ambient_brightness()
 
     print ambient_brightness
@@ -57,11 +73,13 @@ def run_once(config, plugins):
 
     return True
 
+
 def init_plugins(config):
     return (
         ScreenBrightnessPlugin(config.get('screen_brightness', {})),
         ThinkpadKeyboardBrightnessPlugin(config.get('keyboard_brightness', {}))
     )
+
 
 def run(config):
     samplerate = config['samplerate']
